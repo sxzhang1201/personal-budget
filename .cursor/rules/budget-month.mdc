@@ -1,0 +1,23 @@
+---
+description: Budget month assignment for expense dates (21st–20th cycles)
+globs: data/**/*.csv,scripts/**/*.py
+alwaysApply: false
+---
+
+# Budget Month Rule
+
+Expenses are grouped by **budget month**, not calendar month. Each budget month runs from the 21st through the 20th of the next calendar month.
+
+- Day **21 or later** → budget month is that calendar month (e.g. `2026-05-25` → `2026-05`)
+- Day **20 or earlier** → budget month is the previous calendar month (e.g. `2026-06-05` → `2026-05`)
+
+When summarizing or filtering expenses, use `budget_month()` in `scripts/monthly_summary.py`. Do not filter by `strftime("%Y-%m")` on the raw date.
+
+Examples:
+
+| Expense date | Budget month |
+|--------------|--------------|
+| 2026-05-21   | 2026-05      |
+| 2026-05-20   | 2026-04      |
+| 2026-06-01   | 2026-05      |
+| 2026-06-21   | 2026-06      |

@@ -21,7 +21,11 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--month",
-        help="Month to summarize in YYYY-MM format. Defaults to all months.",
+        help=(
+            "Budget month to summarize in YYYY-MM format "
+            "(each month runs from the 21st through the 20th). "
+            "Defaults to all months."
+        ),
     )
     parser.add_argument(
         "--csv",
@@ -37,6 +41,23 @@ def parse_month(value: str) -> str:
         return datetime.strptime(value, "%Y-%m").strftime("%Y-%m")
     except ValueError as exc:
         raise SystemExit(f"Invalid --month value {value!r}. Use YYYY-MM.") from exc
+
+
+def budget_month(expense_date: datetime) -> str:
+    """Map an expense date to its budget month (21st through 20th cycles).
+
+    Expenses on the 21st or later belong to that calendar month.
+    Expenses on the 20th or earlier belong to the previous calendar month.
+    """
+    if expense_date.day > 20:
+        return expense_date.strftime("%Y-%m")
+
+    year = expense_date.year
+    month = expense_date.month - 1
+    if month == 0:
+        month = 12
+        year -= 1
+    return f"{year}-{month:02d}"
 
 
 def read_expenses(csv_path: Path, month_filter: str | None) -> dict[str, Decimal]:
@@ -68,7 +89,7 @@ def read_expenses(csv_path: Path, month_filter: str | None) -> dict[str, Decimal
                     f"Invalid date on row {row_number}: {date_value!r}. Use YYYY-MM-DD."
                 ) from exc
 
-            if month_filter and expense_date.strftime("%Y-%m") != month_filter:
+            if month_filter and budget_month(expense_date) != month_filter:
                 continue
 
             if not category:

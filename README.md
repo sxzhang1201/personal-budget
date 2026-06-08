@@ -31,6 +31,22 @@ The starter CSV includes one example row. Replace it with your own expenses when
 - `payment_method`: Cash, debit card, credit card, bank transfer, etc.
 - `notes`: Optional extra details
 
+## Budget Month Rule
+
+Each budget month runs from the **21st of one calendar month through the 20th of the next**.
+
+- Expenses dated **after the 20th** (21st onward) belong to that calendar month.
+- Expenses dated **on or before the 20th** belong to the previous calendar month.
+
+Examples:
+
+- `2026-05-25` → May budget month
+- `2026-05-20` → April budget month
+- `2026-06-05` → May budget month
+- `2026-06-21` → June budget month
+
+The `--month` flag uses this budget month, not the calendar month of the date.
+
 ## Run A Monthly Summary
 
 Summarize all expenses:
