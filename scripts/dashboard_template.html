@@ -543,7 +543,7 @@
 
     function init() {
       document.getElementById("meta").textContent =
-        `Generated ${DASHBOARD_DATA.generated_at} from ${DASHBOARD_DATA.source_csv}. Budget months run from the 21st through the 20th.`;
+        "Each budget month runs from the 21st through the 20th of the next calendar month.";
 
       const monthSelect = document.getElementById("month-select");
       for (const month of DASHBOARD_DATA.budget_months) {

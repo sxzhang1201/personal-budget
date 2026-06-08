@@ -1,9 +1,6 @@
 site_name: Personal Budget
-site_description: Local expense tracking, budget months, and reporting
+site_description: Personal expense dashboard
 site_url: https://sxzhang1201.github.io/personal-budget/
-repo_url: https://github.com/sxzhang1201/personal-budget
-repo_name: sxzhang1201/personal-budget
-edit_uri: edit/master/docs/
 
 theme:
   name: material
@@ -21,58 +18,11 @@ theme:
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
-  features:
-    - navigation.tabs
-    - navigation.sections
-    - navigation.top
-    - navigation.indexes
-    - toc.follow
-    - search.suggest
-    - content.code.copy
-    - content.tooltips
 
 nav:
   - Dashboard: dashboard.html
-  - Documentation: documentation.md
-  - Where data lives: where-data-lives.md
-  - Site usage: site-usage.md
-  - Workflows:
-      - workflows/index.md
-      - Add expenses: workflows/add-expenses.md
-      - Monthly summary: workflows/monthly-summary.md
-      - Dashboard workflow: workflows/dashboard.md
-  - Systems:
-      - systems/index.md
-      - Expense data: systems/expense-data.md
-      - Scripts: systems/scripts.md
-  - Rules:
-      - Budget month: rules/budget-month.md
 
 hooks:
   - docs/hooks.py
 
-markdown_extensions:
-  - admonition
-  - pymdownx.details
-  - pymdownx.superfences:
-      custom_fences:
-        - name: mermaid
-          class: mermaid
-          format: !!python/name:pymdownx.superfences.fence_code_format
-  - pymdownx.tabbed:
-      alternate_style: true
-  - attr_list
-  - md_in_html
-  - tables
-  - toc:
-      permalink: true
-
-plugins:
-  - search
-
-extra:
-  social:
-    - icon: fontawesome/brands/github
-      link: https://github.com/sxzhang1201/personal-budget
-
-copyright: Personal budget project — local-first, no cloud storage.
+copyright: Personal budget

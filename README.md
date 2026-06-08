@@ -88,16 +88,16 @@ The `reports/` folder is available for anything you want to save later, such as 
 
 This project intentionally avoids databases, cloud services, and Python package dependencies for the core scripts so everything stays local and simple.
 
-## Documentation site
+## Published dashboard
 
-A [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/) site — styled like the [NMCB hand-over documentation](https://nmcb-fair.github.io/nmcb-handover-docs/) — explains workflows, data paths, and the budget month rule.
+The live dashboard is at **https://sxzhang1201.github.io/personal-budget/** (dashboard only — no workflow or script pages for visitors).
+
+To rebuild and deploy after CSV changes, push to `master` or run locally:
 
 ```bash
 pip install -r requirements-docs.txt
 python3 scripts/expense_dashboard.py --output docs/dashboard.html
-mkdocs serve
+mkdocs build
 ```
 
-Open [http://127.0.0.1:8000](http://127.0.0.1:8000). Published docs (after GitHub Actions): **https://sxzhang1201.github.io/personal-budget/**
-
-See `docs/site-usage.md` for build and publish details.
+Developer documentation (workflows, scripts, site build details) lives in [`developer-docs/`](developer-docs/) for maintainers only — it is not published to GitHub Pages.
