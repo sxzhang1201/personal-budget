@@ -40,13 +40,14 @@ Pushing to `master` runs `.github/workflows/docs.yml`, which:
 
 1. Installs MkDocs Material
 2. Generates `docs/dashboard.html` from the current CSV
-3. Deploys to GitHub Pages
+3. Runs `mkdocs build`
+4. Publishes the `site/` folder via the official **GitHub Pages** Actions deploy
 
-After the workflow completes, the site is available at:
+In **Settings → Pages**, choose **Source: GitHub Actions** (not “Deploy from a branch”).
+
+After a successful run, the site URL appears at the top of that Settings page, usually:
 
 **https://sxzhang1201.github.io/personal-budget/**
-
-Enable Pages in the repo settings if needed: **Settings → Pages → Source: GitHub Actions**.
 
 ---
 
