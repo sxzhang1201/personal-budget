@@ -1,0 +1,11 @@
+Expense summary for 2026-05
+===========================
+Category   Amount
+---------  ----------
+Dining     $    87.75
+Groceries  $   160.70
+Health     $    17.00
+Insurance  $   176.95
+Utilities  $   379.31
+---------  ----------
+Total      $   821.71

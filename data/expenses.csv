@@ -1,0 +1,31 @@
+date,category,description,amount,payment_method,notes
+2026-06-01,Mortgage,Mortgage,1210.70,Debit card,House
+2026-06-01,Insurance,ING Home Insurance,73.79,Debit card,
+2026-06-01,Insurance,Liability insurance,6.17,Debit card,
+2026-05-27,Insurance,Health insurance,176.95,Debit card,
+2026-05-25,Utilities,Drinking Water,13.00,Debit card, Vitens
+2026-05-27,Utilities,Electricity and Heating,147.00,Debit card, Vattenfall
+2026-05-27,Utilities,VVE,154.95,Debit card, Vattenfall
+2026-06-03,Utilities,Waste; Sewerage; Property,113.51,Debit card, Almere Gemeete
+2026-06-01,Membership,Fitness,61.00,Debit card,Skyline Fitness
+2026-06-02,Utilities,Mobile Phone Bill,18.61,Debit card,
+2026-05-21,Utilities,Internet,64.36,Debit card,
+2026-06-05,Membership,ChatGPT,21.39,Credit card,
+2026-06-05,Membership,AMEX Membership, 55.00,Credit card,
+2026-05-30,Groceries,Joybuy,110.30,Credit card,
+2026-05-26,Groceries,AH (Almere),50.40,Debit card,
+2026-05-30,Health,Hair Cut,17.00,Debit card,
+2026-05-22,Dining,Lunch (AH),6.95,Debit card,
+2026-05-23,Dining,Lunch (Vitam),5.00,Debit card,
+2026-05-27,Dining,Lunch (AH),2.75,Debit card,
+2026-05-28,Dining,Lunch (AH),6.80,Debit card,
+2026-05-30,Dining,Lunch (AH),3.95,Debit card,
+2026-05-30,Dining,ChatTime,7.80,Debit card,
+2026-05-30,Dining,Lunch (Vitam),5.00,Debit card,
+2026-05-31,Dining,Dan Dan Noodle,25.00,Debit card,
+2026-05-31,Dining,New York Piza,24.50,Debit card,
+2026-06-04,Groceries,AH (Almere),35.70,Debit card,
+2026-06-07,Groceries,AH (Ooster Park),19.22,Debit card,
+2026-06-07,Dining,Rong Ji,25.00,Debit card,
+2026-06-01,Entertainment,Game,48.00,Credit card,Solo Leveling
+2026-06-01,Other,Gift for Tseko,15.00,Debit card,PhD Defense

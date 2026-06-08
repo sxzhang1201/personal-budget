@@ -1,0 +1,14 @@
+Expense summary for 2026-06
+===========================
+Category       Amount
+-------------  ----------
+Dining         $    25.00
+Entertainment  $    48.00
+Groceries      $    54.92
+Insurance      $    79.96
+Membership     $   137.39
+Mortgage       $ 1,210.70
+Other          $    15.00
+Utilities      $   132.12
+-------------  ----------
+Total          $ 1,703.09

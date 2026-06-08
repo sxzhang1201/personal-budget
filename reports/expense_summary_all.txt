@@ -1,0 +1,15 @@
+Expense summary
+===============
+Category       Amount
+-------------  ----------
+Dining         $   112.75
+Entertainment  $    48.00
+Groceries      $   215.62
+Health         $    17.00
+Insurance      $   256.91
+Membership     $   137.39
+Mortgage       $ 1,210.70
+Other          $    15.00
+Utilities      $   511.43
+-------------  ----------
+Total          $ 2,524.80
