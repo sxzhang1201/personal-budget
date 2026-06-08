@@ -19,7 +19,7 @@ python3 scripts/expense_dashboard.py --output docs/dashboard.html
 mkdocs serve
 ```
 
-Open [http://127.0.0.1:8000](http://127.0.0.1:8000). The site reloads when you edit files under `docs/`.
+Open [http://127.0.0.1:8000](http://127.0.0.1:8000). The root URL opens the **dashboard**; project docs are under **Documentation** in the nav.
 
 ---
 
@@ -30,7 +30,7 @@ python3 scripts/expense_dashboard.py --output docs/dashboard.html
 mkdocs build
 ```
 
-Output is written to `site/`. Open `site/index.html` or deploy the folder to any static host.
+Output is written to `site/`. Open `site/index.html` for the dashboard, or `site/documentation/` for the docs home.
 
 ---
 
@@ -55,7 +55,8 @@ After a successful run, the site URL appears at the top of that Settings page, u
 
 | Change | Edit |
 |--------|------|
-| Home page / data-flow diagram | `docs/index.md` |
+| Home page / data-flow diagram | `docs/documentation.md` |
+| Site home (dashboard) | `docs/dashboard.html` → copied to `index.html` on build |
 | Navigation | `mkdocs.yml` → `nav` |
 | Workflow pages | `docs/workflows/*.md` |
 | Theme colours | `mkdocs.yml` → `theme.palette` |
@@ -76,6 +77,6 @@ flowchart LR
 | Artifact | Location | Audience |
 |----------|----------|----------|
 | **Documentation site** | `docs/` → `site/` | How the project works |
-| **Interactive dashboard** | `reports/dashboard.html` | Spending charts and KPIs |
+| **Interactive dashboard** | `docs/dashboard.html` | Spending charts and KPIs (also served at `/`) |
 
-The nav link **Dashboard (live)** opens the generated HTML chart page inside the doc site bundle.
+The **Dashboard** tab is first in the nav and is also copied to `/` when the site is built.

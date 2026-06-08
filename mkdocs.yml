@@ -1,4 +1,4 @@
-site_name: Personal Budget Documentation
+site_name: Personal Budget
 site_description: Local expense tracking, budget months, and reporting
 site_url: https://sxzhang1201.github.io/personal-budget/
 repo_url: https://github.com/sxzhang1201/personal-budget
@@ -32,21 +32,24 @@ theme:
     - content.tooltips
 
 nav:
-  - Home: index.md
+  - Dashboard: dashboard.html
+  - Documentation: documentation.md
   - Where data lives: where-data-lives.md
   - Site usage: site-usage.md
   - Workflows:
       - workflows/index.md
       - Add expenses: workflows/add-expenses.md
       - Monthly summary: workflows/monthly-summary.md
-      - Dashboard: workflows/dashboard.md
+      - Dashboard workflow: workflows/dashboard.md
   - Systems:
       - systems/index.md
       - Expense data: systems/expense-data.md
       - Scripts: systems/scripts.md
   - Rules:
       - Budget month: rules/budget-month.md
-  - Dashboard (live): dashboard.html
+
+hooks:
+  - docs/hooks.py
 
 markdown_extensions:
   - admonition

@@ -131,8 +131,9 @@ These habits apply to **every** export, backup, or share of budget data.
 | **[Site usage](site-usage.md)** | How to run and publish this documentation |
 | **[Workflows](workflows/index.md)** | Add expenses, summaries, dashboard generation |
 | **[Systems](systems/index.md)** | Python modules and script reference |
+| **[Dashboard](dashboard.html)** | Interactive charts — also the site home page |
+| **[Documentation](documentation.md)** | Data-flow diagram and project overview |
 | **[Rules](rules/budget-month.md)** | Budget month (21st–20th) convention |
-| **[Dashboard (live)](dashboard.html)** | Interactive charts (generated before site build) |
 
 ---
 
