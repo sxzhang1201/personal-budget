@@ -7,6 +7,7 @@ A small local budgeting project for tracking expenses manually in a CSV file and
 ```text
 data/
   expenses.csv
+  budget.json
 reports/
   dashboard.html
 scripts/
@@ -33,6 +34,18 @@ The starter CSV includes one example row. Replace it with your own expenses when
 - `amount`: Expense amount, such as `54.32`
 - `payment_method`: Cash, debit card, credit card, bank transfer, etc.
 - `notes`: Optional extra details
+
+## Monthly income
+
+Set your budget-month income in `data/budget.json`:
+
+```json
+{
+  "monthly_income": 4513
+}
+```
+
+The dashboard and monthly summary (with `--month`) show income, remaining balance, and % of income spent.
 
 ## Budget Month Rule
 

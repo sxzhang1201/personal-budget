@@ -3,10 +3,14 @@
 from __future__ import annotations
 
 import csv
+import json
 from dataclasses import dataclass
 from datetime import datetime
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
+
+
+DEFAULT_BUDGET_PATH = Path(__file__).resolve().parents[1] / "data" / "budget.json"
 
 
 @dataclass(frozen=True)
@@ -45,6 +49,26 @@ def budget_month(expense_date: datetime) -> str:
         month = 12
         year -= 1
     return f"{year}-{month:02d}"
+
+
+def load_monthly_income(budget_path: Path = DEFAULT_BUDGET_PATH) -> Decimal:
+    if not budget_path.exists():
+        raise SystemExit(f"Budget file not found: {budget_path}")
+
+    try:
+        payload = json.loads(budget_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise SystemExit(f"Invalid JSON in budget file: {budget_path}") from exc
+
+    if "monthly_income" not in payload:
+        raise SystemExit(f"Budget file is missing monthly_income: {budget_path}")
+
+    try:
+        return Decimal(str(payload["monthly_income"]))
+    except InvalidOperation as exc:
+        raise SystemExit(
+            f"Invalid monthly_income value in budget file: {payload['monthly_income']!r}."
+        ) from exc
 
 
 def load_expenses(csv_path: Path) -> list[Expense]:

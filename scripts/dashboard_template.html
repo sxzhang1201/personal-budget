@@ -101,6 +101,12 @@
       margin-top: 6px;
     }
 
+    .metric-value.multiline {
+      font-size: 1rem;
+      line-height: 1.6;
+      white-space: pre-line;
+    }
+
     .metric-detail {
       font-size: 0.85rem;
       color: var(--muted);
@@ -273,7 +279,7 @@
       const avgTransaction = count ? total / count : 0;
       const avgDaily = count ? total / 30 : 0;
       const categoryTotals = totalsByCategory(expenses);
-      const topCategory = categoryTotals[0] || ["—", 0];
+      const topCategories = categoryTotals.slice(0, 3);
       const largest = expenses.reduce(
         (max, expense) => (expense.amount > max.amount ? expense : max),
         { amount: 0, description: "—" }
@@ -292,18 +298,24 @@
         .filter((expense) => recurringCategories.has(expense.category))
         .reduce((sum, expense) => sum + expense.amount, 0);
       const variableTotal = total - fixedTotal;
+      const monthlyIncome = DASHBOARD_DATA.monthly_income || 0;
+      const remaining = monthlyIncome - total;
+      const spentShare = monthlyIncome ? total / monthlyIncome : 0;
 
       return {
         total,
         count,
         avgTransaction,
         avgDaily,
-        topCategory,
+        topCategories,
         largest,
         momChange,
         fixedTotal,
         variableTotal,
         fixedShare: total ? fixedTotal / total : 0,
+        monthlyIncome,
+        remaining,
+        spentShare,
       };
     }
 
@@ -315,22 +327,38 @@
         ? "No prior month to compare"
         : `${metrics.momChange >= 0 ? "+" : ""}${percent.format(metrics.momChange)} vs previous month`;
 
+      const remainingClass = metrics.remaining >= 0 ? "positive" : "negative";
+      const remainingDetail = metrics.remaining >= 0 ? "Left after expenses" : "Over budget";
+
+      const topCategoriesValue = metrics.topCategories.length
+        ? metrics.topCategories
+            .map(([name, amount]) => `${name}  ${currency.format(amount)}`)
+            .join("\n")
+        : "—";
+      const topCategoriesDetail = metrics.topCategories.length
+        ? "Highest spend categories"
+        : "No expenses";
+
       const cards = [
-        ["Total Spend", currency.format(metrics.total), formatBudgetMonth(selectedMonth)],
+        ["Monthly Income", currency.format(metrics.monthlyIncome), formatBudgetMonth(selectedMonth)],
+        ["Total Spend", currency.format(metrics.total), percent.format(metrics.spentShare) + " of income"],
+        ["Remaining", currency.format(metrics.remaining), remainingDetail],
         ["Transactions", metrics.count.toString(), `${currency.format(metrics.avgTransaction)} avg`],
         ["Daily Average", currency.format(metrics.avgDaily), "Based on 30-day budget month"],
-        ["Top Category", metrics.topCategory[0], currency.format(metrics.topCategory[1])],
+        ["Top 3 Categories", topCategoriesValue, topCategoriesDetail, true],
         ["Largest Expense", metrics.largest.description || "—", currency.format(metrics.largest.amount || 0)],
         ["Month over Month", metrics.momChange == null ? "—" : percent.format(metrics.momChange), momText],
         ["Fixed Costs", currency.format(metrics.fixedTotal), percent.format(metrics.fixedShare) + " of spend"],
         ["Variable Costs", currency.format(metrics.variableTotal), "Everything outside fixed categories"],
       ];
 
-      document.getElementById("metrics").innerHTML = cards.map(([label, value, detail]) => `
+      document.getElementById("metrics").innerHTML = cards.map(([label, value, detail, multiline]) => `
         <div class="metric">
           <div class="metric-label">${label}</div>
-          <div class="metric-value">${value}</div>
-          <div class="metric-detail ${label === "Month over Month" ? momClass : ""}">${detail}</div>
+          <div class="metric-value${multiline ? " multiline" : ""}">${value}</div>
+          <div class="metric-detail ${
+            label === "Month over Month" ? momClass : label === "Remaining" ? remainingClass : ""
+          }">${detail}</div>
         </div>
       `).join("");
     }
@@ -402,19 +430,31 @@
         type: "bar",
         data: {
           labels: monthTotals.map((item) => item.month),
-          datasets: [{
-            label: "Total spend",
-            data: monthTotals.map((item) => item.total),
-            backgroundColor: monthTotals.map((item) =>
-              item.month === selectedMonth ? "#2563eb" : "#93c5fd"
-            ),
-            borderRadius: 6,
-          }],
+          datasets: [
+            {
+              label: "Spend",
+              data: monthTotals.map((item) => item.total),
+              backgroundColor: monthTotals.map((item) =>
+                item.month === selectedMonth ? "#2563eb" : "#93c5fd"
+              ),
+              borderRadius: 6,
+            },
+            {
+              label: "Income",
+              data: monthTotals.map(() => DASHBOARD_DATA.monthly_income),
+              type: "line",
+              borderColor: "#059669",
+              backgroundColor: "#059669",
+              borderWidth: 2,
+              pointRadius: 3,
+              fill: false,
+            },
+          ],
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
-          plugins: { legend: { display: false } },
+          plugins: { legend: { position: "bottom" } },
           scales: {
             y: {
               ticks: {

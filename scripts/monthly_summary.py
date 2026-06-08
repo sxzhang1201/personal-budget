@@ -8,11 +8,12 @@ from collections import defaultdict
 from decimal import Decimal
 from pathlib import Path
 
-from expense_data import load_expenses
+from expense_data import load_expenses, load_monthly_income
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_CSV_PATH = PROJECT_ROOT / "data" / "expenses.csv"
+DEFAULT_BUDGET_PATH = PROJECT_ROOT / "data" / "budget.json"
 
 
 def parse_args() -> argparse.Namespace:
@@ -56,7 +57,11 @@ def summarize_by_category(csv_path: Path, month_filter: str | None) -> dict[str,
     return dict(sorted(totals.items()))
 
 
-def print_summary(totals: dict[str, Decimal], month_filter: str | None) -> None:
+def print_summary(
+    totals: dict[str, Decimal],
+    month_filter: str | None,
+    monthly_income: Decimal,
+) -> None:
     title = f"Expense summary for {month_filter}" if month_filter else "Expense summary"
     print(title)
     print("=" * len(title))
@@ -77,12 +82,21 @@ def print_summary(totals: dict[str, Decimal], month_filter: str | None) -> None:
     print(f"{'-' * category_width}  {'-' * 10}")
     print(f"{'Total':<{category_width}}  ${grand_total:>9,.2f}")
 
+    if month_filter:
+        remaining = monthly_income - grand_total
+        spent_share = grand_total / monthly_income if monthly_income else Decimal("0")
+        print()
+        print(f"{'Monthly income':<{category_width}}  ${monthly_income:>9,.2f}")
+        print(f"{'Remaining':<{category_width}}  ${remaining:>9,.2f}")
+        print(f"{'Spent of income':<{category_width}}  {spent_share * 100:>8.1f}%")
+
 
 def main() -> None:
     args = parse_args()
     month_filter = parse_month(args.month) if args.month else None
+    monthly_income = load_monthly_income(DEFAULT_BUDGET_PATH)
     totals = summarize_by_category(args.csv, month_filter)
-    print_summary(totals, month_filter)
+    print_summary(totals, month_filter, monthly_income)
 
 
 if __name__ == "__main__":

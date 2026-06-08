@@ -9,11 +9,12 @@ import webbrowser
 from datetime import datetime, timezone
 from pathlib import Path
 
-from expense_data import load_expenses
+from expense_data import load_expenses, load_monthly_income
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_CSV_PATH = PROJECT_ROOT / "data" / "expenses.csv"
+DEFAULT_BUDGET_PATH = PROJECT_ROOT / "data" / "budget.json"
 DEFAULT_OUTPUT_PATH = PROJECT_ROOT / "reports" / "dashboard.html"
 DASHBOARD_TEMPLATE_PATH = Path(__file__).resolve().parent / "dashboard_template.html"
 
@@ -42,8 +43,9 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def build_dashboard_payload(csv_path: Path) -> dict:
+def build_dashboard_payload(csv_path: Path, budget_path: Path = DEFAULT_BUDGET_PATH) -> dict:
     expenses = load_expenses(csv_path)
+    monthly_income = load_monthly_income(budget_path)
     budget_months = sorted({expense.budget_month for expense in expenses})
     default_month = budget_months[-1] if budget_months else None
 
@@ -55,6 +57,7 @@ def build_dashboard_payload(csv_path: Path) -> dict:
     return {
         "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
         "source_csv": source_csv,
+        "monthly_income": float(monthly_income),
         "expenses": [expense.to_dict() for expense in expenses],
         "budget_months": budget_months,
         "default_month": default_month,
