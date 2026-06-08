@@ -8,7 +8,10 @@ A small local budgeting project for tracking expenses manually in a CSV file and
 data/
   expenses.csv
 reports/
+  dashboard.html
 scripts/
+  expense_data.py
+  expense_dashboard.py
   monthly_summary.py
 ```
 
@@ -61,8 +64,40 @@ Summarize one month:
 python3 scripts/monthly_summary.py --month 2026-06
 ```
 
+## Expense Dashboard
+
+Generate an interactive HTML dashboard with charts and metrics:
+
+```bash
+python3 scripts/expense_dashboard.py --open
+```
+
+This writes `reports/dashboard.html`. Open that file in your browser any time to review spending.
+
+The dashboard includes:
+
+- **Metrics**: total spend, transaction count, daily average, top category, largest expense, month-over-month change, fixed vs variable costs
+- **Charts**: monthly trend, category breakdown, category share, payment methods, stacked category view by month
+- **Table**: 10 most recent expenses for the selected budget month
+
+Use the budget month dropdown to switch months. Charts use Chart.js from a CDN, so you need internet access when viewing the dashboard.
+
 ## Optional Report Files
 
 The `reports/` folder is available for anything you want to save later, such as copied command output, monthly notes, or exported charts.
 
-This project intentionally avoids databases, cloud services, and external dependencies so everything stays local and simple.
+This project intentionally avoids databases, cloud services, and Python package dependencies for the core scripts so everything stays local and simple.
+
+## Documentation site
+
+A [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/) site — styled like the [NMCB hand-over documentation](https://nmcb-fair.github.io/nmcb-handover-docs/) — explains workflows, data paths, and the budget month rule.
+
+```bash
+pip install -r requirements-docs.txt
+python3 scripts/expense_dashboard.py --output docs/dashboard.html
+mkdocs serve
+```
+
+Open [http://127.0.0.1:8000](http://127.0.0.1:8000). Published docs (after GitHub Actions): **https://sxzhang1201.github.io/personal-budget/**
+
+See `docs/site-usage.md` for build and publish details.

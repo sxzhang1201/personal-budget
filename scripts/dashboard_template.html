@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Personal Budget Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --bg: #f4f6fb;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --accent: #2563eb;
+      --accent-soft: #dbeafe;
+      --positive: #059669;
+      --negative: #dc2626;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 1.75rem;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-top: 4px;
+    }
+
+    .controls {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    label {
+      font-size: 0.875rem;
+      color: var(--muted);
+    }
+
+    select {
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--card);
+      font-size: 0.95rem;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .metric {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+    }
+
+    .metric-label {
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .metric-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-top: 6px;
+    }
+
+    .metric-detail {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .metric-detail.positive { color: var(--positive); }
+    .metric-detail.negative { color: var(--negative); }
+
+    .charts {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+    }
+
+    .card h2 {
+      margin: 0 0 12px;
+      font-size: 1rem;
+    }
+
+    .span-4 { grid-column: span 4; }
+    .span-6 { grid-column: span 6; }
+    .span-8 { grid-column: span 8; }
+    .span-12 { grid-column: span 12; }
+
+    .chart-wrap {
+      position: relative;
+      height: 280px;
+    }
+
+    .chart-wrap.tall { height: 320px; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    th, td {
+      padding: 10px 8px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+    }
+
+    th {
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    td.amount, th.amount { text-align: right; }
+
+    .empty {
+      color: var(--muted);
+      padding: 24px;
+      text-align: center;
+    }
+
+    @media (max-width: 900px) {
+      .span-4, .span-6, .span-8 { grid-column: span 12; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div>
+        <h1>Personal Budget Dashboard</h1>
+        <div class="subtitle" id="meta"></div>
+      </div>
+      <div class="controls">
+        <label for="month-select">Budget month</label>
+        <select id="month-select"></select>
+      </div>
+    </header>
+
+    <section class="metrics" id="metrics"></section>
+
+    <section class="charts">
+      <div class="card span-8">
+        <h2>Monthly Spending Trend</h2>
+        <div class="chart-wrap tall"><canvas id="monthly-trend-chart"></canvas></div>
+      </div>
+      <div class="card span-4">
+        <h2>Payment Methods</h2>
+        <div class="chart-wrap tall"><canvas id="payment-chart"></canvas></div>
+      </div>
+      <div class="card span-6">
+        <h2>Spending by Category</h2>
+        <div class="chart-wrap"><canvas id="category-chart"></canvas></div>
+      </div>
+      <div class="card span-6">
+        <h2>Category Share</h2>
+        <div class="chart-wrap"><canvas id="category-share-chart"></canvas></div>
+      </div>
+      <div class="card span-12">
+        <h2>Category Breakdown by Month</h2>
+        <div class="chart-wrap tall"><canvas id="stacked-category-chart"></canvas></div>
+      </div>
+      <div class="card span-12">
+        <h2>Recent Expenses</h2>
+        <div id="recent-table"></div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const DASHBOARD_DATA = __DASHBOARD_DATA__;
+
+    const currency = new Intl.NumberFormat(undefined, {
+      style: "currency",
+      currency: "EUR",
+      minimumFractionDigits: 2,
+    });
+
+    const percent = new Intl.NumberFormat(undefined, {
+      style: "percent",
+      minimumFractionDigits: 1,
+      maximumFractionDigits: 1,
+    });
+
+    const palette = [
+      "#2563eb", "#059669", "#d97706", "#dc2626", "#7c3aed",
+      "#0891b2", "#db2777", "#65a30d", "#ea580c", "#4f46e5",
+    ];
+
+    function sumAmounts(expenses) {
+      return expenses.reduce((total, expense) => total + expense.amount, 0);
+    }
+
+    function groupBy(items, keyFn) {
+      const groups = new Map();
+      for (const item of items) {
+        const key = keyFn(item);
+        if (!groups.has(key)) {
+          groups.set(key, []);
+        }
+        groups.get(key).push(item);
+      }
+      return groups;
+    }
+
+    function totalsByCategory(expenses) {
+      const totals = new Map();
+      for (const expense of expenses) {
+        totals.set(expense.category, (totals.get(expense.category) || 0) + expense.amount);
+      }
+      return [...totals.entries()].sort((a, b) => b[1] - a[1]);
+    }
+
+    function formatBudgetMonth(value) {
+      const [year, month] = value.split("-");
+      const date = new Date(Number(year), Number(month) - 1, 1);
+      return date.toLocaleDateString(undefined, { month: "long", year: "numeric" });
+    }
+
+    function computeMetrics(expenses, selectedMonth, allExpenses) {
+      const total = sumAmounts(expenses);
+      const count = expenses.length;
+      const avgTransaction = count ? total / count : 0;
+      const avgDaily = count ? total / 30 : 0;
+      const categoryTotals = totalsByCategory(expenses);
+      const topCategory = categoryTotals[0] || ["—", 0];
+      const largest = expenses.reduce(
+        (max, expense) => (expense.amount > max.amount ? expense : max),
+        { amount: 0, description: "—" }
+      );
+
+      const monthIndex = DASHBOARD_DATA.budget_months.indexOf(selectedMonth);
+      const previousMonth = monthIndex > 0 ? DASHBOARD_DATA.budget_months[monthIndex - 1] : null;
+      const previousExpenses = previousMonth
+        ? allExpenses.filter((expense) => expense.budget_month === previousMonth)
+        : [];
+      const previousTotal = sumAmounts(previousExpenses);
+      const momChange = previousTotal ? ((total - previousTotal) / previousTotal) : null;
+
+      const recurringCategories = new Set(["Mortgage", "Insurance", "Utilities", "Membership"]);
+      const fixedTotal = expenses
+        .filter((expense) => recurringCategories.has(expense.category))
+        .reduce((sum, expense) => sum + expense.amount, 0);
+      const variableTotal = total - fixedTotal;
+
+      return {
+        total,
+        count,
+        avgTransaction,
+        avgDaily,
+        topCategory,
+        largest,
+        momChange,
+        fixedTotal,
+        variableTotal,
+        fixedShare: total ? fixedTotal / total : 0,
+      };
+    }
+
+    function renderMetrics(metrics, selectedMonth) {
+      const momClass = metrics.momChange == null
+        ? ""
+        : metrics.momChange <= 0 ? "positive" : "negative";
+      const momText = metrics.momChange == null
+        ? "No prior month to compare"
+        : `${metrics.momChange >= 0 ? "+" : ""}${percent.format(metrics.momChange)} vs previous month`;
+
+      const cards = [
+        ["Total Spend", currency.format(metrics.total), formatBudgetMonth(selectedMonth)],
+        ["Transactions", metrics.count.toString(), `${currency.format(metrics.avgTransaction)} avg`],
+        ["Daily Average", currency.format(metrics.avgDaily), "Based on 30-day budget month"],
+        ["Top Category", metrics.topCategory[0], currency.format(metrics.topCategory[1])],
+        ["Largest Expense", metrics.largest.description || "—", currency.format(metrics.largest.amount || 0)],
+        ["Month over Month", metrics.momChange == null ? "—" : percent.format(metrics.momChange), momText],
+        ["Fixed Costs", currency.format(metrics.fixedTotal), percent.format(metrics.fixedShare) + " of spend"],
+        ["Variable Costs", currency.format(metrics.variableTotal), "Everything outside fixed categories"],
+      ];
+
+      document.getElementById("metrics").innerHTML = cards.map(([label, value, detail]) => `
+        <div class="metric">
+          <div class="metric-label">${label}</div>
+          <div class="metric-value">${value}</div>
+          <div class="metric-detail ${label === "Month over Month" ? momClass : ""}">${detail}</div>
+        </div>
+      `).join("");
+    }
+
+    function renderRecentTable(expenses) {
+      const recent = [...expenses].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 10);
+      if (!recent.length) {
+        document.getElementById("recent-table").innerHTML = '<div class="empty">No expenses for this month.</div>';
+        return;
+      }
+
+      document.getElementById("recent-table").innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Category</th>
+              <th>Description</th>
+              <th>Payment</th>
+              <th class="amount">Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${recent.map((expense) => `
+              <tr>
+                <td>${expense.date}</td>
+                <td>${expense.category}</td>
+                <td>${expense.description || "—"}</td>
+                <td>${expense.payment_method}</td>
+                <td class="amount">${currency.format(expense.amount)}</td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      `;
+    }
+
+    let monthlyTrendChart;
+    let paymentChart;
+    let categoryChart;
+    let categoryShareChart;
+    let stackedCategoryChart;
+
+    function destroyCharts() {
+      [monthlyTrendChart, paymentChart, categoryChart, categoryShareChart, stackedCategoryChart]
+        .forEach((chart) => chart && chart.destroy());
+    }
+
+    function renderCharts(allExpenses, selectedMonth) {
+      destroyCharts();
+
+      const monthTotals = DASHBOARD_DATA.budget_months.map((month) => {
+        const monthExpenses = allExpenses.filter((expense) => expense.budget_month === month);
+        return { month, total: sumAmounts(monthExpenses) };
+      });
+
+      const selectedExpenses = allExpenses.filter((expense) => expense.budget_month === selectedMonth);
+      const categoryTotals = totalsByCategory(selectedExpenses);
+      const paymentTotals = [...groupBy(selectedExpenses, (expense) => expense.payment_method).entries()]
+        .map(([method, items]) => [method, sumAmounts(items)])
+        .sort((a, b) => b[1] - a[1]);
+
+      const categories = [...new Set(allExpenses.map((expense) => expense.category))].sort();
+      const categoryColors = Object.fromEntries(
+        categories.map((category, index) => [category, palette[index % palette.length]])
+      );
+
+      monthlyTrendChart = new Chart(document.getElementById("monthly-trend-chart"), {
+        type: "bar",
+        data: {
+          labels: monthTotals.map((item) => item.month),
+          datasets: [{
+            label: "Total spend",
+            data: monthTotals.map((item) => item.total),
+            backgroundColor: monthTotals.map((item) =>
+              item.month === selectedMonth ? "#2563eb" : "#93c5fd"
+            ),
+            borderRadius: 6,
+          }],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: {
+              ticks: {
+                callback: (value) => currency.format(value),
+              },
+            },
+          },
+        },
+      });
+
+      paymentChart = new Chart(document.getElementById("payment-chart"), {
+        type: "doughnut",
+        data: {
+          labels: paymentTotals.map(([method]) => method),
+          datasets: [{
+            data: paymentTotals.map(([, amount]) => amount),
+            backgroundColor: paymentTotals.map((_, index) => palette[index % palette.length]),
+          }],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: "bottom" },
+            tooltip: {
+              callbacks: {
+                label: (context) => `${context.label}: ${currency.format(context.raw)}`,
+              },
+            },
+          },
+        },
+      });
+
+      categoryChart = new Chart(document.getElementById("category-chart"), {
+        type: "bar",
+        data: {
+          labels: categoryTotals.map(([category]) => category),
+          datasets: [{
+            label: "Amount",
+            data: categoryTotals.map(([, amount]) => amount),
+            backgroundColor: categoryTotals.map(([category]) => categoryColors[category]),
+            borderRadius: 6,
+          }],
+        },
+        options: {
+          indexAxis: "y",
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: {
+              ticks: {
+                callback: (value) => currency.format(value),
+              },
+            },
+          },
+        },
+      });
+
+      categoryShareChart = new Chart(document.getElementById("category-share-chart"), {
+        type: "pie",
+        data: {
+          labels: categoryTotals.map(([category]) => category),
+          datasets: [{
+            data: categoryTotals.map(([, amount]) => amount),
+            backgroundColor: categoryTotals.map(([category]) => categoryColors[category]),
+          }],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: "bottom" },
+            tooltip: {
+              callbacks: {
+                label: (context) => {
+                  const total = sumAmounts(selectedExpenses);
+                  const share = total ? context.raw / total : 0;
+                  return `${context.label}: ${currency.format(context.raw)} (${percent.format(share)})`;
+                },
+              },
+            },
+          },
+        },
+      });
+
+      stackedCategoryChart = new Chart(document.getElementById("stacked-category-chart"), {
+        type: "bar",
+        data: {
+          labels: DASHBOARD_DATA.budget_months,
+          datasets: categories.map((category) => ({
+            label: category,
+            data: DASHBOARD_DATA.budget_months.map((month) =>
+              sumAmounts(allExpenses.filter((expense) =>
+                expense.budget_month === month && expense.category === category
+              ))
+            ),
+            backgroundColor: categoryColors[category],
+            borderRadius: 4,
+          })),
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            x: { stacked: true },
+            y: {
+              stacked: true,
+              ticks: {
+                callback: (value) => currency.format(value),
+              },
+            },
+          },
+        },
+      });
+    }
+
+    function updateDashboard(selectedMonth) {
+      const allExpenses = DASHBOARD_DATA.expenses;
+      const selectedExpenses = allExpenses.filter((expense) => expense.budget_month === selectedMonth);
+      const metrics = computeMetrics(selectedExpenses, selectedMonth, allExpenses);
+      renderMetrics(metrics, selectedMonth);
+      renderRecentTable(selectedExpenses);
+      renderCharts(allExpenses, selectedMonth);
+    }
+
+    function init() {
+      document.getElementById("meta").textContent =
+        `Generated ${DASHBOARD_DATA.generated_at} from ${DASHBOARD_DATA.source_csv}. Budget months run from the 21st through the 20th.`;
+
+      const monthSelect = document.getElementById("month-select");
+      for (const month of DASHBOARD_DATA.budget_months) {
+        const option = document.createElement("option");
+        option.value = month;
+        option.textContent = formatBudgetMonth(month);
+        monthSelect.appendChild(option);
+      }
+
+      if (!DASHBOARD_DATA.budget_months.length) {
+        document.querySelector(".container").innerHTML =
+          '<div class="empty">No expenses found. Add rows to data/expenses.csv and regenerate the dashboard.</div>';
+        return;
+      }
+
+      monthSelect.value = DASHBOARD_DATA.default_month;
+      monthSelect.addEventListener("change", () => updateDashboard(monthSelect.value));
+      updateDashboard(monthSelect.value);
+    }
+
+    init();
+  </script>
+</body>
+</html>

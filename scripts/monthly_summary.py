@@ -4,11 +4,11 @@
 from __future__ import annotations
 
 import argparse
-import csv
 from collections import defaultdict
-from datetime import datetime
-from decimal import Decimal, InvalidOperation
+from decimal import Decimal
 from pathlib import Path
+
+from expense_data import load_expenses
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -37,72 +37,21 @@ def parse_args() -> argparse.Namespace:
 
 
 def parse_month(value: str) -> str:
+    from datetime import datetime
+
     try:
         return datetime.strptime(value, "%Y-%m").strftime("%Y-%m")
     except ValueError as exc:
         raise SystemExit(f"Invalid --month value {value!r}. Use YYYY-MM.") from exc
 
 
-def budget_month(expense_date: datetime) -> str:
-    """Map an expense date to its budget month (21st through 20th cycles).
-
-    Expenses on the 21st or later belong to that calendar month.
-    Expenses on the 20th or earlier belong to the previous calendar month.
-    """
-    if expense_date.day > 20:
-        return expense_date.strftime("%Y-%m")
-
-    year = expense_date.year
-    month = expense_date.month - 1
-    if month == 0:
-        month = 12
-        year -= 1
-    return f"{year}-{month:02d}"
-
-
-def read_expenses(csv_path: Path, month_filter: str | None) -> dict[str, Decimal]:
+def summarize_by_category(csv_path: Path, month_filter: str | None) -> dict[str, Decimal]:
     totals: dict[str, Decimal] = defaultdict(Decimal)
 
-    if not csv_path.exists():
-        raise SystemExit(f"CSV file not found: {csv_path}")
-
-    with csv_path.open(newline="", encoding="utf-8") as csv_file:
-        reader = csv.DictReader(csv_file)
-        required_fields = {"date", "category", "amount"}
-        missing_fields = required_fields.difference(reader.fieldnames or [])
-        if missing_fields:
-            fields = ", ".join(sorted(missing_fields))
-            raise SystemExit(f"CSV is missing required field(s): {fields}")
-
-        for row_number, row in enumerate(reader, start=2):
-            date_value = (row.get("date") or "").strip()
-            category = (row.get("category") or "").strip()
-            amount_value = (row.get("amount") or "").strip()
-
-            if not date_value and not category and not amount_value:
-                continue
-
-            try:
-                expense_date = datetime.strptime(date_value, "%Y-%m-%d")
-            except ValueError as exc:
-                raise SystemExit(
-                    f"Invalid date on row {row_number}: {date_value!r}. Use YYYY-MM-DD."
-                ) from exc
-
-            if month_filter and budget_month(expense_date) != month_filter:
-                continue
-
-            if not category:
-                raise SystemExit(f"Missing category on row {row_number}.")
-
-            try:
-                amount = Decimal(amount_value)
-            except InvalidOperation as exc:
-                raise SystemExit(
-                    f"Invalid amount on row {row_number}: {amount_value!r}."
-                ) from exc
-
-            totals[category] += amount
+    for expense in load_expenses(csv_path):
+        if month_filter and expense.budget_month != month_filter:
+            continue
+        totals[expense.category] += expense.amount
 
     return dict(sorted(totals.items()))
 
@@ -132,7 +81,7 @@ def print_summary(totals: dict[str, Decimal], month_filter: str | None) -> None:
 def main() -> None:
     args = parse_args()
     month_filter = parse_month(args.month) if args.month else None
-    totals = read_expenses(args.csv, month_filter)
+    totals = summarize_by_category(args.csv, month_filter)
     print_summary(totals, month_filter)
 
 
