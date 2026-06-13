@@ -27,11 +27,17 @@ date,category,description,amount,payment_method,notes
 2026-06-04,Groceries,AH (Almere),35.70,Debit card,
 2026-06-07,Groceries,AH (Ooster Park),19.22,Debit card,
 2026-06-07,Dining,Rong Ji,25.00,Debit card,
-2026-06-01,Entertainment,Game,48.00,Credit card,Solo Leveling
-2026-06-01,Other,Gift for Tseko,15.00,Debit card,PhD Defense
+2026-06-01,Entertainment,Game,48.00,Credit card,Solo Leveling,
+2026-06-01,Other,Gift for Tseko,15.00,Debit card,PhD Defense,
 2026-06-09,Dining,Lunch (ABN),6.70,Debit card,
 2026-06-09,Dining,Breakfast (AH),4.09,Debit card,
 2026-06-09,Groceries,AH (Almere),40.11,Debit card,
 2026-05-30,Dining,Dinner (Fulu),59.36,Debit card,
 2026-06-10,Dining,Coffee (AH),1.10,Debit card,
-2026-06-10,Entertainment,Game,10.92,Credit card,Solo Leveling
+2026-06-10,Entertainment,Game,10.92,Credit card,Solo Leveling,
+2026-06-12,Entertainment,Reading,7.99,Credit card,Qi Dian,
+2026-06-13,Groceries,AH (Online),66.75,Debit card,
+2026-06-13,Groceries,AH (Almere),18.06,Debit card,
+2026-06-13,Groceries,PLUS (Duin),1.64,Debit card,
+2026-06-13,Groceries,Joybuy,89.83,Debit card,
+
