@@ -20,7 +20,7 @@ date,category,description,amount,payment_method,notes
 2026-05-27,Dining,Lunch (AH),2.75,Debit card,
 2026-05-28,Dining,Lunch (AH),6.80,Debit card,
 2026-05-30,Dining,Lunch (AH),3.95,Debit card,
-2026-05-30,Dining,ChatTime,7.80,Debit card,
+2026-05-30,Dining,ChatTime,7.80,Debit card,Milk Tea,
 2026-05-30,Dining,Lunch (Vitam),5.00,Debit card,
 2026-05-31,Dining,Dan Dan Noodle,25.00,Debit card,
 2026-05-31,Dining,New York Piza,24.50,Debit card,
@@ -40,4 +40,19 @@ date,category,description,amount,payment_method,notes
 2026-06-13,Groceries,AH (Almere),18.06,Debit card,
 2026-06-13,Groceries,PLUS (Duin),1.64,Debit card,
 2026-06-13,Groceries,Joybuy,89.83,Debit card,
+2026-06-14,Membership,ING GO,4.00,Debit card,OranjePakket,
+2026-06-17,Groceries,AH (Almere),25.91,Debit card,
+2026-06-18,Dining,Pesca (Reservation),60.91,Debit card,
+2026-06-18,Dining,ChatTime,7.65,Debit card,Milk Tea,
+2026-06-18,Dining,Dinner (Tarim),40.36,Debit card,
+2026-06-13,Travel,Booking,502.36,Debit card, Colmar,
+2026-06-13,Travel,Booking,97.20,Debit card, Colmar,
+2026-06-13,Groceries,Holland and Barrett,277.61,Debit card,
+2026-06-17,Entertainment,Game,17.00,Credit card,Solo Leveling,
+2026-06-13,Clothes, Stussy,50.00,Debit card,
+
+
+
+
+
 
