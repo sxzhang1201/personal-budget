@@ -45,11 +45,63 @@ date,category,description,amount,payment_method,notes
 2026-06-18,Dining,Pesca (Reservation),60.91,Debit card,
 2026-06-18,Dining,ChatTime,7.65,Debit card,Milk Tea,
 2026-06-18,Dining,Dinner (Tarim),40.36,Debit card,
-2026-06-13,Travel,Booking,502.36,Debit card, Colmar,
-2026-06-13,Travel,Booking,97.20,Debit card, Colmar,
-2026-06-13,Groceries,Holland and Barrett,277.61,Debit card,
+2026-06-13,Travel,Booking,502.36,Credit card, Colmar,
+2026-06-13,Travel,Booking,97.20,Credit card, Colmar,
+2026-06-13,Groceries,Holland and Barrett,277.61,Credit card,
 2026-06-17,Entertainment,Game,17.00,Credit card,Solo Leveling,
-2026-06-13,Clothes, Stussy,50.00,Debit card,
+2026-06-13,Clothes, Stussy,50.00,Credit card,
+2026-06-22,Dining,AH (Diemn),4.99,Debit card,
+2026-06-22,Dining,PLUS (Duin),8.07,Debit card,
+2026-06-23,Dining,ChatTime,7.65,Debit card,Milk Tea,
+
+2026-06-24,Utilities, Internet, 64.36, Debit card,
+2026-06-24,Dining,Coffee (AH), 1.10, Debit card,
+2026-06-24,Health,Hair Cut, 22.00, Debit card,
+2026-06-24,Groceries,AH (Almere), 32.53, Debit card,
+2026-06-25,Utilities, Drinking Water, 13.00, Debit card, Vitens
+2026-06-26,Dining,Lunch (Zwolle),6.00,Debit card,
+2026-06-26,Groceries,AH (Almere), 10.45, Debit card,
+2026-06-27,Utilities, VVE, 154.95, Debit card, 
+2026-06-28,Groceries,AH (Almere), 31.65, Debit card,
+2026-06-29,Utilities,Electricity and Heating,147.00,Debit card, Vattenfall
+
+2026-06-30,Insurance,ING Home Insurance,73.79,Debit card,
+2026-06-30,Insurance,Liability insurance,6.17,Debit card,
+2026-06-29,Insurance,Health insurance,176.95,Debit card, NV Zorgverzekeraar UMC
+2026-06-29,Dining, Lunch (Marken),38.70,Debit card,
+2026-06-29,Dining, Spoonoo,17.30,Debit card,
+2026-06-30,Groceries,AH (Almere), 5.48, Debit card,
+2026-06-30,Groceries, Holland en Barrett, 11.49, Debit card,
+
+2026-07-01,Mortgage,Mortgage,1210.70,Debit card,House
+2026-07-01,Utilities,Mobile Phone Bill,14.98,Debit card,
+2026-07-01,Dining, KFC (Utrecht),11.84,Debit card,
+2026-07-01,Dining, Fulu,35.00,Debit card,
+2026-07-02,Membership,Fitness,61.00,Debit card,Skyline Fitness
+2026-07-03,Utilities,Waste; Sewerage; Property,113.51,Debit card, Almere Gemeete
+
+2026-06-20,Membership,Cursor,21.66,Credit card,
+2026-06-25,Dining,Pesca,64.17,Debit card,
+2026-06-27,Entertainment,Game,6.28,Credit card,Solo Leveling
+
+2026-06-29,Pet,Zara Home,60.14,Credit card,
+
+2026-06-30,Clothes, Foret Coat,147.50,Credit card,De Bijenkorf
+2026-06-30,Housewares, Corkscrew,60.14,Credit card,De Bijenkorf
+2026-06-30,Furniture, Zara Home,60.14,Credit card,
+
+2026-07-02,Entertainment,Game,23.20,Credit card,Solo Leveling
+2026-07-02,Parents,Flights to Hamburg,921.26,Credit card,
+2026-07-02,PareGroceriesnts,Bol,16.98,Credit card,
+
+
+
+
+
+
+
+
+
 
 
 
